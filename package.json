@@ -17,6 +17,7 @@
     "release": "npm run build && standard-version",
     "prepublishOnly": "npm run build",
     "build": "tsc --build --verbose",
+    "prepare": "tsc",
     "test": "npm run mocha",
     "lint": "eslint src",
     "lint-fix": "eslint src --fix",
