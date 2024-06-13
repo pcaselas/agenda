@@ -1,7 +1,8 @@
 /* eslint-disable import/first */
 import { DateTime } from 'luxon';
 import * as date from 'date.js';
-import * as debug from 'debug';
+import debug from 'debug';
+
 import { parseExpression } from 'cron-parser';
 import humanInterval = require('human-interval');
 import { isValidDate } from './isValidDate';

@@ -21,7 +21,9 @@
 		"resolveJsonModule": true,
 		"sourceMap": true,
 		"isolatedModules": false,
-		"declaration": true
+		"declaration": true,
+		"esModuleInterop": true, // <-- Add this line
+		"allowSyntheticDefaultImports": true // <-- Add this line
 	},
 	"exclude": ["node_modules", "**/__tests__"],
 	"include": ["./src"]

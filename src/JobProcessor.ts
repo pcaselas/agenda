@@ -1,4 +1,5 @@
-import * as debug from 'debug';
+import debug from 'debug';
+
 import type { IAgendaJobStatus, IAgendaStatus } from './types/AgendaStatus';
 import type { IJobDefinition } from './types/JobDefinition';
 import type { Agenda, JobWithId } from './index';

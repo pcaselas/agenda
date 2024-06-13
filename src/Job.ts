@@ -1,5 +1,6 @@
 import * as date from 'date.js';
-import * as debug from 'debug';
+import debug from 'debug';
+
 import { ObjectId } from 'mongodb';
 import { ChildProcess, fork } from 'child_process';
 import type { Agenda } from './index';

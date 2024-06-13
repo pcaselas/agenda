@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
-import * as debug from 'debug';
+import debug from 'debug';
+
 
 import type { Db, Filter, MongoClientOptions, Sort } from 'mongodb';
 import { SortDirection } from 'mongodb';
@@ -565,6 +566,36 @@ export class Agenda extends EventEmitter {
 		this.off('processJob', this.jobProcessor.process.bind(this.jobProcessor));
 
 		this.jobProcessor = undefined;
+	}
+
+	/**
+	 * Clear the interval that processes the jobs
+	 * @returns resolves when all running jobs complete
+	 */
+	async drain(): Promise<void> {
+		return new Promise(async resolve => {
+			log('Agenda.drain called, clearing interval for processJobs()');
+
+			// Clear the interval to stop processing new jobs
+			this.jobProcessor?.stop();
+			const status = await this.jobProcessor?.getStatus();
+			const runningJobs = status?.runningJobs;
+			// Check if there are no running jobs
+			if (!this.jobProcessor || runningJobs === 0) {
+				resolve();
+			} else {
+				log('Agenda.drain waiting for jobs to finish');
+				// Listen for 'complete' events to resolve the promise
+				this.on('complete', async () => {
+					// Check if all running jobs are done
+					const status = await this.jobProcessor?.getStatus();
+					const runningJobs = status?.runningJobs;
+					if (runningJobs === 0) {
+						resolve();
+					}
+				});
+			}
+		});
 	}
 }
 
