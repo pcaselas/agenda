@@ -116,7 +116,7 @@ export class JobDbRepository {
 		const resp = await this.collection.findOneAndUpdate(
 			criteria as Filter<IJobParameters>,
 			update,
-			options
+			{...options, includeResultMetadata: true }
 		);
 
 		return resp?.value || undefined;
@@ -163,7 +163,7 @@ export class JobDbRepository {
 		const result = await this.collection.findOneAndUpdate(
 			JOB_PROCESS_WHERE_QUERY,
 			JOB_PROCESS_SET_QUERY,
-			JOB_RETURN_QUERY
+			{ ...JOB_RETURN_QUERY, includeResultMetadata: true}
 		);
 
 		return result.value || undefined;
@@ -314,7 +314,7 @@ export class JobDbRepository {
 				const result = await this.collection.findOneAndUpdate(
 					{ _id: id, name: props.name },
 					update,
-					{ returnDocument: 'after' }
+					{ returnDocument: 'after', includeResultMetadata: true }
 				);
 				return this.processDbResult(job, result.value as IJobParameters<DATA>);
 			}
@@ -353,7 +353,8 @@ export class JobDbRepository {
 					update,
 					{
 						upsert: true,
-						returnDocument: 'after'
+						returnDocument: 'after',
+						includeResultMetadata: true
 					}
 				);
 				log(
@@ -378,7 +379,8 @@ export class JobDbRepository {
 				log('calling findOneAndUpdate() with unique object as query: \n%O', query);
 				const result = await this.collection.findOneAndUpdate(query as IJobParameters, update, {
 					upsert: true,
-					returnDocument: 'after'
+					returnDocument: 'after',
+					includeResultMetadata: true
 				});
 				return this.processDbResult(job, result.value as IJobParameters<DATA>);
 			}
