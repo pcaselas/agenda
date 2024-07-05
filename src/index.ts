@@ -401,31 +401,31 @@ export class Agenda extends EventEmitter {
 		interval: string | number,
 		names: string[],
 		data?: undefined,
-		options?: { timezone?: string; skipImmediate?: boolean; forkMode?: boolean }
+		options?: { timezone?: string; skipImmediate?: boolean; forkMode?: boolean ; nextRunAt?: Date}
 	): Promise<Job<void>[]>;
 	async every(
 		interval: string | number,
 		name: string,
 		data?: undefined,
-		options?: { timezone?: string; skipImmediate?: boolean; forkMode?: boolean }
+		options?: { timezone?: string; skipImmediate?: boolean; forkMode?: boolean ; nextRunAt?: Date}
 	): Promise<Job<void>>;
 	async every<DATA = unknown>(
 		interval: string | number,
 		names: string[],
 		data: DATA,
-		options?: { timezone?: string; skipImmediate?: boolean; forkMode?: boolean }
+		options?: { timezone?: string; skipImmediate?: boolean; forkMode?: boolean ; nextRunAt?: Date}
 	): Promise<Job<DATA>[]>;
 	async every<DATA = unknown>(
 		interval: string | number,
 		name: string,
 		data: DATA,
-		options?: { timezone?: string; skipImmediate?: boolean; forkMode?: boolean }
+		options?: { timezone?: string; skipImmediate?: boolean; forkMode?: boolean ; nextRunAt?: Date}
 	): Promise<Job<DATA>>;
 	async every(
 		interval: string | number,
 		names: string | string[],
 		data?: unknown,
-		options?: { timezone?: string; skipImmediate?: boolean; forkMode?: boolean }
+		options?: { timezone?: string; skipImmediate?: boolean; forkMode?: boolean ; nextRunAt?: Date}
 	): Promise<Job<any> | Job<any>[]> {
 		/**
 		 * Internal method to setup job that gets run every interval
@@ -441,6 +441,7 @@ export class Agenda extends EventEmitter {
 			const job = this.create(name, data);
 			job.attrs.type = 'single';
 			job.repeatEvery(interval, options);
+			if (options?.nextRunAt) job.attrs.nextRunAt = options.nextRunAt
 			if (options?.forkMode) {
 				job.forkMode(options.forkMode);
 			}
