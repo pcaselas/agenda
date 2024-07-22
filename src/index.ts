@@ -440,6 +440,7 @@ export class Agenda extends EventEmitter {
 		const createJob = async (name: string): Promise<Job> => {
 			const job = this.create(name, data);
 			job.attrs.type = 'single';
+			if (options?.nextRunAt) job.attrs.nextRunAt = options.nextRunAt
 			job.repeatEvery(interval, options);
 			if (options?.nextRunAt) job.attrs.nextRunAt = options.nextRunAt
 			if (options?.forkMode) {
