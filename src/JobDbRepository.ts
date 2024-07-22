@@ -165,7 +165,7 @@ export class JobDbRepository {
 			JOB_PROCESS_SET_QUERY,
 			{ ...JOB_RETURN_QUERY, returnDocument: 'after', includeResultMetadata: true }
 		);
-
+		log(`result-->`,JSON.stringify(result))
 		return result?.value || undefined;
 	}
 
