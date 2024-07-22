@@ -160,9 +160,9 @@ export class JobDbRepository {
 		};
 
 		// Find ONE and ONLY ONE job and set the 'lockedAt' time so that job begins to be processed
-		log(`JOB_PROCESS_WHERE_QUERY: ${JOB_PROCESS_WHERE_QUERY}`)
-		log(`JOB_PROCESS_SET_QUERY: ${JOB_PROCESS_SET_QUERY}`)
-		log(`JOB_RETURN_QUERY: ${JOB_RETURN_QUERY}`)
+		log(`JOB_PROCESS_WHERE_QUERY: ${JSON.stringify(JOB_PROCESS_WHERE_QUERY)}`)
+		log(`JOB_PROCESS_SET_QUERY: ${JSON.stringify(JOB_PROCESS_SET_QUERY)}`)
+		log(`JOB_RETURN_QUERY: ${JSON.stringify(JOB_RETURN_QUERY)}`)
 		const result = await this.collection.findOneAndUpdate(
 			JOB_PROCESS_WHERE_QUERY,
 			JOB_PROCESS_SET_QUERY,
