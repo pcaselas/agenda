@@ -166,7 +166,7 @@ export class JobDbRepository {
 			{ ...JOB_RETURN_QUERY, returnDocument: 'after', includeResultMetadata: true }
 		);
 
-		return result.value || undefined;
+		return result?.value || undefined;
 	}
 
 	async connect(): Promise<void> {
@@ -313,9 +313,9 @@ export class JobDbRepository {
 				const result = await this.collection.findOneAndUpdate(
 					{ _id: id, name: props.name },
 					update,
-					{ returnDocument: 'after' }
+					{ returnDocument: 'after', includeResultMetadata: true }
 				);
-				return this.processDbResult(job, result.value as IJobParameters<DATA>);
+				return this.processDbResult(job, result?.value as IJobParameters<DATA>);
 			}
 
 			if (props.type === 'single') {
