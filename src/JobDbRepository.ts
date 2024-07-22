@@ -116,7 +116,7 @@ export class JobDbRepository {
 		const resp = await this.collection.findOneAndUpdate(
 			criteria as Filter<IJobParameters>,
 			update,
-			{...options, includeResultMetadata: true }
+			{ ...options, returnDocument: 'after', includeResultMetadata: true }
 		);
 
 		return resp?.value || undefined;
@@ -163,7 +163,7 @@ export class JobDbRepository {
 		const result = await this.collection.findOneAndUpdate(
 			JOB_PROCESS_WHERE_QUERY,
 			JOB_PROCESS_SET_QUERY,
-			{ ...JOB_RETURN_QUERY, includeResultMetadata: true}
+			{ ...JOB_RETURN_QUERY, returnDocument: 'after', includeResultMetadata: true }
 		);
 
 		return result.value || undefined;
@@ -179,8 +179,8 @@ export class JobDbRepository {
 		if (log.enabled) {
 			log(
 				`connected with collection: ${collection}, collection size: ${
-					typeof this.collection.estimatedDocumentCount === 'function'
-						? await this.collection.estimatedDocumentCount()
+					typeof this.collection.countDocuments === 'function'
+						? await this.collection.countDocuments()
 						: '?'
 				}`
 			);
@@ -217,9 +217,8 @@ export class JobDbRepository {
 			connectionString = `mongodb://${connectionString}`;
 		}
 
-		const client = await MongoClient.connect(connectionString, {
-			...options
-		});
+		const client = new MongoClient(connectionString, options);
+		await client.connect();
 
 		return client.db();
 	}
@@ -268,7 +267,7 @@ export class JobDbRepository {
 			}
 		);
 
-		if (!result.acknowledged || result.matchedCount !== 1) {
+		if (result.modifiedCount !== 1) {
 			throw new Error(
 				`job ${id} (name: ${job.attrs.name}) cannot be updated in the database, maybe it does not exist anymore?`
 			);
@@ -314,7 +313,7 @@ export class JobDbRepository {
 				const result = await this.collection.findOneAndUpdate(
 					{ _id: id, name: props.name },
 					update,
-					{ returnDocument: 'after', includeResultMetadata: true }
+					{ returnDocument: 'after' }
 				);
 				return this.processDbResult(job, result.value as IJobParameters<DATA>);
 			}
